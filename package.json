@@ -18,16 +18,25 @@
         "title": "Hello dude"
       }
     ],
+    "viewsContainers": {
+			"activitybar": [
+				{
+					"id": "package-explorer",
+					"title": "Package Explorer",
+					"icon": "src/assets/dep.svg"
+				}
+			]
+		},
     "views": {
-      "tree-view": [
-          {
-              "id": "nodeDependencies",
-              "name": "Node Dependencies",
-              
-              "when": "workspaceHasPackageJSON"
-          }
-      ]
-  }
+			"package-explorer": [
+				{
+					"id": "nodeDependencies",
+					"name": "Node Dependencies",
+					"icon": "src/assets/dep.svg",
+					"contextualTitle": "Package Explorer"
+				}
+			]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
