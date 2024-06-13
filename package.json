@@ -36,7 +36,13 @@
 					"contextualTitle": "Package Explorer"
 				}
 			]
-    }
+    },
+    "viewsWelcome": [
+      {
+        "view": "nodeDependencies",
+        "contents": "hello"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
