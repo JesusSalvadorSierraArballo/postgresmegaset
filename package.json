@@ -1,6 +1,6 @@
 {
-  "name": "hellojssa",
-  "displayName": "hellojssa",
+  "name": "postgresqlmegaset",
+  "displayName": "PostgreSQL Mega Set",
   "description": "just an example",
   "version": "0.0.1",
   "engines": {
@@ -14,11 +14,11 @@
   "contributes": {
     "commands": [
       {
-        "command": "hellojssa.helloDude",
+        "command": "postgresqlmegaset.helloDude",
         "title": "Hello dude"
       },
       {
-        "command": "hellojssa.showConnections",
+        "command": "postgresqlmegaset.showConnections",
         "title": "Show Connections"
       }
     ],

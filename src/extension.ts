@@ -9,11 +9,12 @@ import { Storage } from './repositories/storage';
 export async function activate(context: vscode.ExtensionContext) {
 	const myStorage = new Storage(context);
 
-	const messa = vscode.commands.registerCommand('hellojssa.showConnections', async () => {
+	const messa = vscode.commands.registerCommand('postgresqlmegaset.showConnections', async () => {
 		const conn = await myStorage.getConnections();
 		vscode.window.showInformationMessage(JSON.stringify(conn));
 	});
-	const disposable = vscode.commands.registerCommand('hellojssa.helloDude', async () => {
+	
+	const disposable = vscode.commands.registerCommand('postgresqlmegaset.helloDude', async () => {
 
 	    let user = await vscode.window.showInputBox({title: 'User'}) || 'postgres';
 	    let password = await vscode.window.showInputBox({title: 'password'}) || 'postgres';
