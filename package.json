@@ -16,26 +16,30 @@
       {
         "command": "hellojssa.helloDude",
         "title": "Hello dude"
+      },
+      {
+        "command": "hellojssa.showConnections",
+        "title": "Show Connections"
       }
     ],
     "viewsContainers": {
-			"activitybar": [
-				{
-					"id": "package-explorer",
-					"title": "Package Explorer",
-					"icon": "src/assets/dep.svg"
-				}
-			]
-		},
+      "activitybar": [
+        {
+          "id": "package-explorer",
+          "title": "Package Explorer",
+          "icon": "src/assets/dep.svg"
+        }
+      ]
+    },
     "views": {
-			"package-explorer": [
-				{
-					"id": "nodeDependencies",
-					"name": "Node Dependencies",
-					"icon": "src/assets/dep.svg",
-					"contextualTitle": "Package Explorer"
-				}
-			]
+      "package-explorer": [
+        {
+          "id": "nodeDependencies",
+          "name": "Node Dependencies",
+          "icon": "src/assets/dep.svg",
+          "contextualTitle": "Package Explorer"
+        }
+      ]
     },
     "viewsWelcome": [
       {

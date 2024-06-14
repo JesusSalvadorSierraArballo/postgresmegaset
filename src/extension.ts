@@ -1,32 +1,37 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { NodeDependenciesProvider } from './nodeDependency';
+import { PostgresProvider } from './postgresStructure';
+import { Storage } from './repositories/storage';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+	const myStorage = new Storage(context);
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "hellojssa" is now active!');
+	const messa = vscode.commands.registerCommand('hellojssa.showConnections', async () => {
+		const conn = await myStorage.getConnections();
+		vscode.window.showInformationMessage(JSON.stringify(conn));
+	});
+	const disposable = vscode.commands.registerCommand('hellojssa.helloDude', async () => {
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('hellojssa.helloDude', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello dude from Jssa!');
-		vscode.window.showErrorMessage('Hello dude from Jssa!');
+	    let user = await vscode.window.showInputBox({title: 'User'}) || 'postgres';
+	    let password = await vscode.window.showInputBox({title: 'password'}) || 'postgres';
+	    let host = await vscode.window.showInputBox({title: 'host'});
+	    let port = await vscode.window.showInputBox({title: 'port'}) || '5334';
+
+		myStorage.saveConection(
+			user,
+			password,
+			host,
+			+port
+		);
 	});
 
 	context.subscriptions.push(disposable);
-	// const fileProvider = new FileProvider()
-	// vscode.window.registerTreeDataProvider('nodeDependencies', fileProvider);
+	context.subscriptions.push(messa);
 	
-  	vscode.window.registerTreeDataProvider('nodeDependencies', new NodeDependenciesProvider("C:/Users/jssa/Documents/repos/example/")
-  );
+  	vscode.window.registerTreeDataProvider('nodeDependencies', new PostgresProvider("C:/Users/jssa/Documents/repos/example/"));
 }
 
 // This method is called when your extension is deactivated
