@@ -10,7 +10,7 @@ export class Storage {
      }
      private context!: ExtensionContext;
 
-    async getConnections() {
+    async getConnections(): Promise<{user: string,password: string,host: string,port: number}[]> {
         const connections = await this.context.secrets.get(Storage.storeKeys.CONNECTIONS);
         if(typeof connections === 'string') return JSON.parse(connections);
         return []
@@ -26,6 +26,11 @@ export class Storage {
         }
         
         await this.context.secrets.store(Storage.storeKeys.CONNECTIONS, JSON.stringify([...connections, newConnection]));
+    }
+        
+    async dropAllConnections(): Promise<{user: string,password: string,host: string,port: number}[]> {
+        await this.context.secrets.store(Storage.storeKeys.CONNECTIONS, JSON.stringify([]));
+        return []
     }
 }
 

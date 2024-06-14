@@ -13,7 +13,12 @@ export async function activate(context: vscode.ExtensionContext) {
 		const conn = await myStorage.getConnections();
 		vscode.window.showInformationMessage(JSON.stringify(conn));
 	});
-	
+
+	const dropAllInstances = vscode.commands.registerCommand('postgresqlmegaset.dropAllConnections', async () => {
+		const conn = await myStorage.dropAllConnections();
+		vscode.window.showInformationMessage(JSON.stringify(conn));
+	});
+
 	const disposable = vscode.commands.registerCommand('postgresqlmegaset.setConnection', async () => {
 
 	    let user = await vscode.window.showInputBox({title: 'User'}) || 'postgres';
@@ -31,6 +36,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposable);
 	context.subscriptions.push(messa);
+	context.subscriptions.push(dropAllInstances);
 	
   	vscode.window.registerTreeDataProvider('nodeDependencies', new PostgresProvider(context));
 }

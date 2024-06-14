@@ -20,6 +20,10 @@
       {
         "command": "postgresqlmegaset.showConnections",
         "title": "Postgres Mega Set: Show Connections"
+      },
+      {
+        "command": "postgresqlmegaset.dropAllConnections",
+        "title": "DA"
       }
     ],
     "viewsContainers": {
@@ -44,9 +48,24 @@
     "viewsWelcome": [
       {
         "view": "nodeDependencies",
-        "contents": "hello"
+        "contents": "Welcome to Postgres Mega Set, I really hope this project can help you"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "postgresqlmegaset.dropAllConnections",
+          "when": "view == nodeDependencies",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "postgresqlmegaset.showConnections",
+          "when": "view == nodeDependencies"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
