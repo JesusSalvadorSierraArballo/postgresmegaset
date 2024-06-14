@@ -30,7 +30,7 @@
       "activitybar": [
         {
           "id": "package-explorer",
-          "title": "Package Explorer",
+          "title": "Postgres mega set",
           "icon": "src/assets/dep.svg"
         }
       ]
@@ -39,7 +39,7 @@
       "package-explorer": [
         {
           "id": "nodeDependencies",
-          "name": "Node Dependencies",
+          "name": "",
           "icon": "src/assets/dep.svg",
           "contextualTitle": "Package Explorer"
         }
