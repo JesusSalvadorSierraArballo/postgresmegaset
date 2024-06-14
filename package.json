@@ -14,12 +14,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "postgresqlmegaset.helloDude",
-        "title": "Hello dude"
+        "command": "postgresqlmegaset.setConnection",
+        "title": "Postgres Mega Set: Add new connection"
       },
       {
         "command": "postgresqlmegaset.showConnections",
-        "title": "Show Connections"
+        "title": "Postgres Mega Set: Show Connections"
       }
     ],
     "viewsContainers": {

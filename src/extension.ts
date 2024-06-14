@@ -14,7 +14,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage(JSON.stringify(conn));
 	});
 	
-	const disposable = vscode.commands.registerCommand('postgresqlmegaset.helloDude', async () => {
+	const disposable = vscode.commands.registerCommand('postgresqlmegaset.setConnection', async () => {
 
 	    let user = await vscode.window.showInputBox({title: 'User'}) || 'postgres';
 	    let password = await vscode.window.showInputBox({title: 'password'}) || 'postgres';
@@ -32,7 +32,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 	context.subscriptions.push(messa);
 	
-  	vscode.window.registerTreeDataProvider('nodeDependencies', new PostgresProvider("C:/Users/jssa/Documents/repos/example/"));
+  	vscode.window.registerTreeDataProvider('nodeDependencies', new PostgresProvider(context));
 }
 
 // This method is called when your extension is deactivated
