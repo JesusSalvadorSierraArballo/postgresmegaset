@@ -23,7 +23,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	    let user = await vscode.window.showInputBox({title: 'User'}) || 'postgres';
 	    let password = await vscode.window.showInputBox({title: 'password'}) || 'postgres';
-	    let host = await vscode.window.showInputBox({title: 'host'});
+	    let host = await vscode.window.showInputBox({title: 'host'}) || 'localhost';
 	    let port = await vscode.window.showInputBox({title: 'port'}) || '5334';
 
 		myStorage.saveConection(
