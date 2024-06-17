@@ -1,36 +1,36 @@
-import pg from 'pg'
+import pg from 'pg';
 
 export class PgConnect {
-    pgConnect(user: string, password: string, host: string = 'localhost', port: number = 5334, database: string) {
+    constructor(user: string, password: string, host: string = 'localhost', port: number = 5432) {
         this.user = user;
         this.password = password;
         this.host = host;
         this.port = port;
-        this.database = database;
+        //this.database = database;
     }
 
     user: string = ''; 
     password: string = ''; 
     host: string = 'localhost'; 
-    port: number = 5334; 
-    database: string = '';
+    port: number = 5432; 
+    //database: string = '';
 
 
-    async getClient() {
-        const { Client } = pg
+    async testConnection(): Promise<boolean> {
+      try {
+        const { Client } = pg;
         const c = new Client({
             user: this.user,
             password: this.password,
             host: this.host,
             port: this.port,
-            database: this.database,
-        })
-
-        const client = new Client()
-        await c.connect()
-
-        const res = await c.query('SELECT $1::text as message', ['Hello world!'])
-        console.log(res.rows[0].message) // Hello world!
-        await c.end()
+            database: 'postgres',
+        });
+        await c.connect();
+        await c.end();
+        return true;
+      } catch(e) {
+        return false;
+      }
     }
 }

@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 import { PostgresProvider } from './postgresStructure';
 import { Storage } from './repositories/storage';
+import { PgConnect } from './pgconnect';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -24,14 +25,27 @@ export async function activate(context: vscode.ExtensionContext) {
 	    let user = await vscode.window.showInputBox({title: 'User'}) || 'postgres';
 	    let password = await vscode.window.showInputBox({title: 'password'}) || 'postgres';
 	    let host = await vscode.window.showInputBox({title: 'host'}) || 'localhost';
-	    let port = await vscode.window.showInputBox({title: 'port'}) || '5334';
+	    let port = await vscode.window.showInputBox({title: 'port'}) || '5432';
 
-		myStorage.saveConection(
+		const connection = new PgConnect(
+			user,
+			password,
+			host,
+			+port);
+
+		const hasConnection = await connection.testConnection();
+		if(hasConnection)
+		{
+			myStorage.saveConection(
 			user,
 			password,
 			host,
 			+port
 		);
+		vscode.window.showInformationMessage('The connection was added');
+		} else {
+			vscode.window.showErrorMessage("Can'n connet to this server");
+		}
 	});
 
 	context.subscriptions.push(disposable);
