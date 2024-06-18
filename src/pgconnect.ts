@@ -40,7 +40,7 @@ export class PgConnect {
         password: this.password,
         host: this.host,
         port: this.port,
-        database: 'postgres',
+        database: this.database,
       });
 
     await c.connect();
