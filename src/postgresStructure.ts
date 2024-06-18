@@ -40,12 +40,12 @@ export class PostgresProvider implements vscode.TreeDataProvider<Instance> {
     }
     else if(element && element instanceof Database) {
      const schemas = await new ConnectionInfo(new PgConnect(element.server.user, element.server.password, element.server.host, element.server.port, element.label)).getSchemas();
-      let dep = schemas.rows.map((db: { nspname: string; })=> new Schema(db.nspname, vscode.TreeItemCollapsibleState.Collapsed, element.server));
+      let dep = schemas.rows.map((db: { schema_name: string; })=> new Schema(db.schema_name, vscode.TreeItemCollapsibleState.Collapsed, element.server));
       return Promise.resolve(dep);
     }
     else if (element && element instanceof Instance) {
       const databases = await new ConnectionInfo(new PgConnect(element.server.user, element.server.password, element.server.host, element.server.port)).getDatabases();
-      let dep = databases.rows.map((db: { datname: string; })=> 
+      let dep = databases.rows.map((db: { datname: string; }) => 
         new Database(db.datname, 
           vscode.TreeItemCollapsibleState.Collapsed, 
           {...element.server, database:db.datname}));
