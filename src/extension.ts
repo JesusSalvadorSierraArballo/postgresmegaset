@@ -9,6 +9,7 @@ import { PgConnect } from './pgconnect';
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
 	const myStorage = new Storage(context);
+	const postgresProvider = new PostgresProvider(context);
 
 	const messa = vscode.commands.registerCommand('postgresqlmegaset.showConnections', async () => {
 		const conn = await myStorage.getConnections();
@@ -17,8 +18,14 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const dropAllInstances = vscode.commands.registerCommand('postgresqlmegaset.dropAllConnections', async () => {
 		const conn = await myStorage.dropAllConnections();
+		postgresProvider.refresh();
 		vscode.window.showInformationMessage(JSON.stringify(conn));
 	});
+
+	vscode.commands.registerCommand('postgresqlmegaset.refreshEntry', () =>
+    postgresProvider.refresh()
+  );
+
 
 	const disposable = vscode.commands.registerCommand('postgresqlmegaset.setConnection', async () => {
 
@@ -41,7 +48,8 @@ export async function activate(context: vscode.ExtensionContext) {
 			password,
 			host,
 			+port
-		);
+		).then(()=> postgresProvider.refresh());
+		
 		vscode.window.showInformationMessage('The connection was added');
 		} else {
 			vscode.window.showErrorMessage("Can'n connet to this server");
@@ -52,7 +60,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(messa);
 	context.subscriptions.push(dropAllInstances);
 	
-  	 vscode.window.registerTreeDataProvider('nodeDependencies', new PostgresProvider(context));
+	vscode.window.registerTreeDataProvider('nodeDependencies', postgresProvider);
 }
 
 // This method is called when your extension is deactivated

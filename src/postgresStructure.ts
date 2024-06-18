@@ -56,6 +56,15 @@ export class PostgresProvider implements vscode.TreeDataProvider<Instance> {
         return Promise.resolve(dependencies);
     }
   }
+
+
+  private _onDidChangeTreeData: vscode.EventEmitter<Instance | undefined | null | void> = new vscode.EventEmitter<Instance | undefined | null | void>();
+  readonly onDidChangeTreeData: vscode.Event<Instance | undefined | null | void> = this._onDidChangeTreeData.event;
+
+  refresh(): void {
+    this._onDidChangeTreeData.fire();
+  }
+
 }
 
 class Instance extends vscode.TreeItem {

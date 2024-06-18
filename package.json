@@ -24,7 +24,15 @@
       {
         "command": "postgresqlmegaset.dropAllConnections",
         "title": "DA"
-      }
+      },
+      {
+        "command": "postgresqlmegaset.refreshEntry",
+        "title": "Postgres Mega Set: Refresh",
+        "icon": {
+            "light": "resources/light/refresh.svg",
+            "dark": "resources/dark/refresh.svg"
+        }
+    }
     ],
     "viewsContainers": {
       "activitybar": [
