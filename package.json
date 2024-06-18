@@ -28,10 +28,7 @@
       {
         "command": "postgresqlmegaset.refreshEntry",
         "title": "Postgres Mega Set: Refresh",
-        "icon": {
-            "light": "resources/light/refresh.svg",
-            "dark": "resources/dark/refresh.svg"
-        }
+        "icon": "src/assets/dark/refresh.svg"
     }
     ],
     "viewsContainers": {
@@ -63,6 +60,11 @@
       "view/title": [
         {
           "command": "postgresqlmegaset.dropAllConnections",
+          "when": "view == nodeDependencies",
+          "group": "navigation"
+        },
+        {
+          "command": "postgresqlmegaset.refreshEntry",
           "when": "view == nodeDependencies",
           "group": "navigation"
         }
