@@ -31,7 +31,7 @@
         {
           "id": "package-explorer",
           "title": "Postgres mega set",
-          "icon": "src/assets/dep.svg"
+          "icon": "src/assets/postgresql.svg"
         }
       ]
     },
