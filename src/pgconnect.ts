@@ -1,20 +1,19 @@
 import pg from 'pg';
 
 export class PgConnect {
-    constructor(user: string, password: string, host: string = 'localhost', port: number = 5432) {
+    constructor(user: string, password: string, host: string = 'localhost', port: number = 5432, database='postgres') {
         this.user = user;
         this.password = password;
         this.host = host;
         this.port = port;
-        //this.database = database;
+        this.database = database;
     }
 
     user: string = ''; 
     password: string = ''; 
     host: string = 'localhost'; 
     port: number = 5432; 
-    //database: string = '';
-
+    database: string = '';
 
     async testConnection(): Promise<boolean> {
       try {
@@ -24,7 +23,7 @@ export class PgConnect {
             password: this.password,
             host: this.host,
             port: this.port,
-            database: 'postgres',
+            database: this.database,
         });
         await c.connect();
         await c.end();
@@ -32,5 +31,20 @@ export class PgConnect {
       } catch(e) {
         return false;
       }
+    }
+
+    async runQuery(query: string): Promise<any> {
+      const { Client } = pg;
+      const c = new Client({
+        user: this.user,
+        password: this.password,
+        host: this.host,
+        port: this.port,
+        database: 'postgres',
+      });
+
+    await c.connect();
+    const res = await c.query(query);
+    return res;
     }
 }

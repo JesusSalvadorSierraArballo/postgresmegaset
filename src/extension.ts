@@ -52,7 +52,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(messa);
 	context.subscriptions.push(dropAllInstances);
 	
-  	vscode.window.registerTreeDataProvider('nodeDependencies', new PostgresProvider(context));
+  	 vscode.window.registerTreeDataProvider('nodeDependencies', new PostgresProvider(context));
 }
 
 // This method is called when your extension is deactivated
