@@ -29,7 +29,12 @@
         "command": "postgresqlmegaset.refreshEntry",
         "title": "Postgres Mega Set: Refresh",
         "icon": "src/assets/dark/refresh.svg"
-    }
+      },
+      {
+        "command": "postgresqlmegaset.crearArchivo",
+        "title": "Postgres Mega Set: Say",
+        "icon": "src/assets/dark/refresh.svg"
+      }
     ],
     "viewsContainers": {
       "activitybar": [

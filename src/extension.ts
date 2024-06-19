@@ -56,9 +56,15 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	const newFile = vscode.commands.registerCommand('postgresqlmegaset.crearArchivo', async () => {
+    const archivo = await vscode.workspace.openTextDocument({ content: 'select * from dual;', language: 'sql' });
+    await vscode.window.showTextDocument(archivo);
+  });
+
 	context.subscriptions.push(disposable);
 	context.subscriptions.push(messa);
 	context.subscriptions.push(dropAllInstances);
+	context.subscriptions.push(newFile);
 	
 	vscode.window.registerTreeDataProvider('nodeDependencies', postgresProvider);
 }
