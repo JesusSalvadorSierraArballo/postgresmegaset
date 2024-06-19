@@ -24,6 +24,16 @@ export async function activate(context: vscode.ExtensionContext) {
     postgresProvider.refresh()
   );
 
+	vscode.commands.registerCommand('postgresqlmegaset.runSentence', async () =>{
+
+		if (vscode.window.activeTextEditor) {
+			let documento = vscode.window.activeTextEditor.document;
+			let texto = documento.getText();
+			vscode.window.showInformationMessage(texto);
+
+		  console.log(await (new PgConnect('testuser', 'testpasssword', 'testhost', 5432, 'testdatabase')).runQuery(texto));
+		}
+	});
 
 	const disposable = vscode.commands.registerCommand('postgresqlmegaset.setConnection', async () => {
 

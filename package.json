@@ -34,6 +34,10 @@
         "command": "postgresqlmegaset.crearArchivo",
         "title": "Postgres Mega Set: Say",
         "icon": "src/assets/dark/refresh.svg"
+      },
+      {
+        "command": "postgresqlmegaset.runSentence",
+        "title": "Postgres Mega Set: Run sentense"
       }
     ],
     "viewsContainers": {
@@ -80,7 +84,14 @@
           "when": "view == nodeDependencies"
         }
       ]
-    }
+    },
+    "keybindings": [
+      {
+        "command": "postgresqlmegaset.runSentence",
+        "key": "f5",
+        "when": "editorTextFocus"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
