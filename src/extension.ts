@@ -4,10 +4,12 @@ import * as vscode from 'vscode';
 import { PostgresProvider } from './postgresStructure';
 import { Storage } from './repositories/storage';
 import { PgConnect } from './pgconnect';
+import { obtenerHtmlParaWebview } from './Webview/queryResults';
 
 export async function activate(context: vscode.ExtensionContext) {
 	const myStorage = new Storage(context);
 	const postgresProvider = new PostgresProvider(context);
+	let panel: vscode.WebviewPanel | undefined;
 
 	const messa = vscode.commands.registerCommand('postgresqlmegaset.showConnections', async () => {
 		const conn = await myStorage.getConnections();
@@ -31,7 +33,30 @@ export async function activate(context: vscode.ExtensionContext) {
 			let texto = documento.getText();
 			vscode.window.showInformationMessage(texto);
 
-		  console.log(await (new PgConnect('testuser', 'testpasssword', 'testhost', 5432, 'testdatabase')).runQuery(texto));
+			const res = await (new PgConnect('testuser', 'testpasssword', 'testhost', 5432, 'testdatabase')).runQuery(texto);
+			if(!res?.rows?.length){
+				return;
+			}
+			
+			if (panel && !panel.visible) {
+				panel.dispose();
+				panel = undefined;
+			}
+
+			if (panel) {
+					panel.webview.html = obtenerHtmlParaWebview(Object.keys(res.rows[0]), res.rows);
+			} else {
+					panel = vscode.window.createWebviewPanel(
+							'pokemon',  
+							'Results', 
+							vscode.ViewColumn.Beside, 
+							{}
+					);
+					panel.webview.html = obtenerHtmlParaWebview(Object.keys(res.rows[0]), res.rows);
+					panel.onDidDispose(() => {
+							panel = undefined;
+					}, null, context.subscriptions);
+			}
 		}
 	});
 
@@ -64,12 +89,18 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	const newFile = vscode.commands.registerCommand('postgresqlmegaset.crearArchivo', async () => {
-    const archivo = await vscode.workspace.openTextDocument({ content: 'select * from dual;', language: 'sql' });
-    await vscode.window.showTextDocument(archivo);
+	const getTableCode = vscode.commands.registerCommand('postgresqlmegaset.getTableCode', (elemento) => {
+    vscode.window.showInformationMessage('Información copiada al portapapeles');
   });
 
-	context.subscriptions.push(disposable, messa, dropAllInstances, newFile);
+	const newFile = vscode.commands.registerCommand('postgresqlmegaset.crearArchivo', async () => {
+    const archivo = await vscode.workspace.openTextDocument({ content: 'select * from user', language: 'sql' });
+    await vscode.window.showTextDocument(archivo);
+  });
+	
+
+
+	context.subscriptions.push(disposable, messa, dropAllInstances, newFile, getTableCode);
 	
 	vscode.window.registerTreeDataProvider('nodeDependencies', postgresProvider);
 }
