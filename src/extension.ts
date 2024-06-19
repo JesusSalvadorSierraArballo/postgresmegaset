@@ -5,8 +5,6 @@ import { PostgresProvider } from './postgresStructure';
 import { Storage } from './repositories/storage';
 import { PgConnect } from './pgconnect';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
 	const myStorage = new Storage(context);
 	const postgresProvider = new PostgresProvider(context);
@@ -61,13 +59,9 @@ export async function activate(context: vscode.ExtensionContext) {
     await vscode.window.showTextDocument(archivo);
   });
 
-	context.subscriptions.push(disposable);
-	context.subscriptions.push(messa);
-	context.subscriptions.push(dropAllInstances);
-	context.subscriptions.push(newFile);
+	context.subscriptions.push(disposable, messa, dropAllInstances, newFile);
 	
 	vscode.window.registerTreeDataProvider('nodeDependencies', postgresProvider);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}
