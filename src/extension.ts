@@ -1,5 +1,3 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { PostgresProvider } from './postgresStructure';
 import { Storage } from './repositories/storage';
@@ -26,25 +24,25 @@ export async function activate(context: vscode.ExtensionContext) {
     postgresProvider.refresh()
   );
 
-	vscode.commands.registerCommand('postgresqlmegaset.runSentence', async () =>{
-
+	vscode.commands.registerCommand('postgresqlmegaset.runSentence', async () => {
 		if (vscode.window.activeTextEditor) {
 			let editor = vscode.window.activeTextEditor;
-			let texto = editor.document.getText(editor.selection) || editor.document.getText();
-			vscode.window.showInformationMessage(texto);
-
-			const res = await (new PgConnect('testuser', 'testpasssword', 'testhost', 5432, 'testdatabase')).runQuery(texto);
-			if(!res?.rows?.length){
-				return;
-			}
+			let text = editor.document.getText(editor.selection) || editor.document.getText();
+			const sentences = text.replaceAll('\r\n', ' ').split(';').filter(Boolean);
 			
+			//TODO CHOSE A CONNECTION BY CONTEX FILE
+			const datasets = await Promise.all(sentences.map(async (s)=> await (new PgConnect('testuser', 'testpasssword', 'testhost', 5432, 'testdatabase')).runQuery(s)));
+			//TODO: ADD TRY AND CATCH 
 			if (panel && !panel.visible) {
 				panel.dispose();
 				panel = undefined;
 			}
-
+			
 			if (panel) {
-					panel.webview.html = obtenerHtmlParaWebview(Object.keys(res.rows[0]), res.rows);
+				panel.webview.html = "";
+				for(let res of datasets) {
+					panel.webview.html += obtenerHtmlParaWebview(Object.keys(res.rows[0]), res.rows);
+				}
 			} else {
 					panel = vscode.window.createWebviewPanel(
 							'pokemon',  
@@ -52,7 +50,9 @@ export async function activate(context: vscode.ExtensionContext) {
 							vscode.ViewColumn.Beside, 
 							{}
 					);
-					panel.webview.html = obtenerHtmlParaWebview(Object.keys(res.rows[0]), res.rows);
+					for(let res of datasets) {
+						panel.webview.html += obtenerHtmlParaWebview(Object.keys(res.rows[0]), res.rows);
+					}
 					panel.onDidDispose(() => {
 							panel = undefined;
 					}, null, context.subscriptions);
@@ -89,12 +89,14 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	//TODO
 	const getTableCode = vscode.commands.registerCommand('postgresqlmegaset.getTableCode', (elemento) => {
     vscode.window.showInformationMessage('Información copiada al portapapeles');
   });
 
+	//TODO: add context instance to file
 	const newFile = vscode.commands.registerCommand('postgresqlmegaset.crearArchivo', async () => {
-    const archivo = await vscode.workspace.openTextDocument({ content: 'select * from user', language: 'sql' });
+    const archivo = await vscode.workspace.openTextDocument({ content: '', language: 'sql' });
     await vscode.window.showTextDocument(archivo);
   });
 	
