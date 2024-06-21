@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { PostgresProvider } from './postgresStructure';
+import { Database, PostgresProvider } from './postgresStructure';
 import { Storage } from './repositories/storage';
 import { PgConnect } from './pgconnect';
 import { obtenerHtmlParaWebview } from './Webview/queryResults';
@@ -8,6 +8,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const myStorage = new Storage(context);
 	const postgresProvider = new PostgresProvider(context);
 	let panel: vscode.WebviewPanel | undefined;
+	const documentInstanceMap = new Map<vscode.TextDocument, Database>();
 
 	const messa = vscode.commands.registerCommand('postgresqlmegaset.showConnections', async () => {
 		const conn = await myStorage.getConnections();
@@ -25,14 +26,25 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
 	vscode.commands.registerCommand('postgresqlmegaset.runSentence', async () => {
-		if (vscode.window.activeTextEditor) {
-			let editor = vscode.window.activeTextEditor;
-			let text = editor.document.getText(editor.selection) || editor.document.getText();
+		let editor = vscode.window.activeTextEditor;
+		if (editor) {
+			let { document } = editor;
+			let text = document.getText(editor.selection) || document.getText();
 			const sentences = text.replaceAll('\r\n', ' ').split(';').filter(Boolean);
 			
-			//TODO CHOSE A CONNECTION BY CONTEX FILE
-			const datasets = await Promise.all(sentences.map(async (s)=> await (new PgConnect('testuser', 'testpasssword', 'testhost', 5432, 'testdatabase')).runQuery(s)));
+			const cs = documentInstanceMap.get(document)?.server;
+			if(!cs) {
+				vscode.window.showInformationMessage("No conecction string");
+				return;
+			}
+	 		
+			let datasets: any[] = [];
+			for (const s of sentences) {
 			//TODO: ADD TRY AND CATCH 
+					const res =  await (new PgConnect(cs.user, cs.password, cs.host, cs.port, cs.database)).runQuery(s);
+					datasets = [...datasets, res];
+			}
+			
 			if (panel && !panel.visible) {
 				panel.dispose();
 				panel = undefined;
@@ -41,17 +53,17 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (panel) {
 				panel.webview.html = "";
 				for(let res of datasets) {
-					panel.webview.html += obtenerHtmlParaWebview(Object.keys(res.rows[0]), res.rows);
+					panel.webview.html += obtenerHtmlParaWebview(res.fields.map(({name}:{name: string}) => name ), res.rows);
 				}
 			} else {
 					panel = vscode.window.createWebviewPanel(
-							'pokemon',  
+							'resultsWebview',  
 							'Results', 
 							vscode.ViewColumn.Beside, 
 							{}
 					);
 					for(let res of datasets) {
-						panel.webview.html += obtenerHtmlParaWebview(Object.keys(res.rows[0]), res.rows);
+						panel.webview.html += obtenerHtmlParaWebview(res.fields.map(({name}: {name: string}) => name ), res.rows);
 					}
 					panel.onDidDispose(() => {
 							panel = undefined;
@@ -95,15 +107,14 @@ export async function activate(context: vscode.ExtensionContext) {
   });
 
 	//TODO: add context instance to file
-	const newFile = vscode.commands.registerCommand('postgresqlmegaset.crearArchivo', async () => {
-    const archivo = await vscode.workspace.openTextDocument({ content: '', language: 'sql' });
-    await vscode.window.showTextDocument(archivo);
+	const newFile = vscode.commands.registerCommand('postgresqlmegaset.newFile', async (element: Database) => {
+    const file = await vscode.workspace.openTextDocument({ content: '', language: 'sql' });
+    const editor = await vscode.window.showTextDocument(file);
+		documentInstanceMap.set(editor.document, element);
   });
-	
-
 
 	context.subscriptions.push(disposable, messa, dropAllInstances, newFile, getTableCode);
-	
+	//TODO: REFACTOR THIS NAME nodeDependencies
 	vscode.window.registerTreeDataProvider('nodeDependencies', postgresProvider);
 }
 

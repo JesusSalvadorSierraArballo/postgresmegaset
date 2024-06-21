@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import * as path from 'path';
 import { ExtensionContext } from 'vscode';
 import { Storage } from './repositories/storage';
@@ -82,9 +81,10 @@ class Instance extends vscode.TreeItem {
     light: path.join(__filename, '..','..', 'src', 'assets', 'light', 'database.svg'), //TODO FIX THAT ICON COLOR
     dark: path.join(__filename, '..','..', 'src', 'assets', 'dark', 'data-cluster.svg')
   };
+  contextValue = 'instance';
 }
 
-class Database extends vscode.TreeItem {
+export class Database extends vscode.TreeItem {
   constructor(
     public readonly label: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
@@ -98,6 +98,8 @@ class Database extends vscode.TreeItem {
     light: path.join(__filename, '..','..', 'src', 'assets', 'light', 'database.svg'), //TODO FIX THAT ICON COLOR
     dark: path.join(__filename, '..','..', 'src', 'assets', 'dark', 'database.svg')
   };
+
+  contextValue = 'database';
 }
 
 class Schema extends vscode.TreeItem {

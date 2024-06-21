@@ -31,8 +31,8 @@
         "icon": "src/assets/dark/refresh.svg"
       },
       {
-        "command": "postgresqlmegaset.crearArchivo",
-        "title": "Postgres Mega Set: Say",
+        "command": "postgresqlmegaset.newFile",
+        "title": "Postgres Mega Set: Create new file",
         "icon": "src/assets/dark/refresh.svg"
       },
       {
@@ -80,8 +80,8 @@
       ],
       "view/item/context": [
         {
-          "command": "postgresqlmegaset.showConnections",
-          "when": "view == nodeDependencies"
+          "command": "postgresqlmegaset.newFile",
+          "when": "view == nodeDependencies && viewItem == database"
         }
       ]
     },
