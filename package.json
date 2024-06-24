@@ -43,14 +43,14 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "package-explorer",
+          "id": "postgres-mega-set",
           "title": "Postgres mega set",
           "icon": "src/assets/postgresql.svg"
         }
       ]
     },
     "views": {
-      "package-explorer": [
+      "postgres-mega-set": [
         {
           "id": "nodeDependencies",
           "name": "",
