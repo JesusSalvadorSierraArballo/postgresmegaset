@@ -114,8 +114,7 @@ export async function activate(context: vscode.ExtensionContext) {
   });
 
 	context.subscriptions.push(disposable, messa, dropAllInstances, newFile, getTableCode);
-	//TODO: REFACTOR THIS NAME nodeDependencies
-	vscode.window.registerTreeDataProvider('nodeDependencies', postgresProvider);
+	vscode.window.registerTreeDataProvider('schemaTree', postgresProvider);
 }
 
 export function deactivate() {}

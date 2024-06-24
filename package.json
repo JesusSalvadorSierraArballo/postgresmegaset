@@ -52,7 +52,7 @@
     "views": {
       "postgres-mega-set": [
         {
-          "id": "nodeDependencies",
+          "id": "schemaTree",
           "name": "",
           "icon": "src/assets/dep.svg",
           "contextualTitle": "Package Explorer"
@@ -61,7 +61,7 @@
     },
     "viewsWelcome": [
       {
-        "view": "nodeDependencies",
+        "view": "schemaTree",
         "contents": "Welcome to Postgres Mega Set, I really hope this project can help you"
       }
     ],
@@ -69,19 +69,19 @@
       "view/title": [
         {
           "command": "postgresqlmegaset.dropAllConnections",
-          "when": "view == nodeDependencies",
+          "when": "view == schemaTree",
           "group": "navigation"
         },
         {
           "command": "postgresqlmegaset.refreshEntry",
-          "when": "view == nodeDependencies",
+          "when": "view == schemaTree",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
           "command": "postgresqlmegaset.newFile",
-          "when": "view == nodeDependencies && viewItem == database"
+          "when": "view == schemaTree && viewItem == database"
         }
       ]
     },
