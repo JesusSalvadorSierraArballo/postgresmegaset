@@ -1,23 +1,162 @@
+import { TableER } from "../types";
+
 export function obtenerHtmlParaWebview(headers: string[], body: Array<Record<string, any[]>>) {
+    return `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Query results</title>
+        </head>
+        <body>
+            <table>
+              <thead>
+                  <tr>
+                      ${headers.map((h) => `<th>${h}</th>`).join('')}
+                  </tr>
+                  </thead>
+                  <tbody>
+                      ${body.map((b) => `<tr>${headers.map(h => `<td>${b[h]}</td>`)}</tr>` ).join('')}
+                  </tbody>
+            </table>
+        </body>
+        </html>`;
+  }
+  
+export function getWebviewContent(tables: TableER[]) {
   return `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Pokémon</title>
-      </head>
-      <body>
-          <table>
-            <thead>
-                <tr>
-                    ${headers.map((h) => `<th>${h}</th>`).join('')}
-                </tr>
-                </thead>
-                <tbody>
-                    ${body.map((b) => `<tr>${headers.map(h => `<td>${b[h]}</td>`)}</tr>` ).join('')}
-                </tbody>
-          </table>
-      </body>
-      </html>`;
+  <!DOCTYPE html>
+<html>
+<head>
+    <title>Tabla Arrastrable en Canvas</title>
+</head>
+<body>
+    <canvas id="miCanvas" width="800" height="800"></canvas>
+    <script>
+
+        class tb {
+            constructor({schema, name, columns, position = {x:0, y:0}}) {
+
+                this.schema = schema;
+                this.name = name;
+                this.columns = columns;
+                this.position = position
+
+                this.maxWidth = Math.max(
+                    this.schema.length, 
+                    this.name.length, 
+                    ...this.columns.map((c) => c.name.length )
+                );
+
+                this.cellWidth = this.maxWidth * 8;
+                this.diagramColumnElements = [this.schema, this.name, ...this.columns.map((c) => c.name)];  
+
+                this.cellHeight = 16;          //el doble del font size
+                this.drag = false;
+                this.hasForeignKey = columns.some((c)=>c.isForeignKey);
+            }
+
+            draw(ctx) {
+                for(let [i, value] of this.diagramColumnElements.entries()) {
+                    let y = (this.cellHeight * i) + this.position.y;
+                    ctx.strokeRect(this.position.x, y, this.cellWidth, this.cellHeight);
+                    ctx.fillText(value,
+                        this.position.x + 10, // Margen de 10
+                        y + this.cellHeight/2 + 4 ); //la mitad del tamaño del espacio * la mitad del tamaño de letra
+                }
+            }
+            getColumnPosition(column) {
+                let position =this.diagramColumnElements.findIndex((e) => e === column )
+                console.log({positionY:this.position.y, index:position, column})
+                return this.position.y + (position * 16) + 8
+            }
+
+            toString() {
+                console.log({
+                    schema:this.schema,
+                    name:this.name,
+                    columns: this.columns
+                })
+            }
+        }
+
+        let tables = ${JSON.stringify(tables)};
+
+
+        var canvas = document.getElementById('miCanvas');
+        var ctx = canvas.getContext('2d');
+        tablesObj = []
+
+        for(let table of tables) {
+            let newTb = new tb(table);
+            newTb.draw(ctx);
+            tablesObj = [...tablesObj, newTb];
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for(let tbl of tablesObj) {
+                tbl.draw(ctx);
+            }
+            let tablesWithFK = tablesObj.filter(({columns})=> columns.some(({isForeignKey})=>isForeignKey))
+
+            if(tablesWithFK.length) {
+
+                for(let table of tablesWithFK) {
+                     let columnsWithFK = table.columns.filter(({isForeignKey})=> isForeignKey).filter(({relationship})=> tablesObj.some((t) => t.name === relationship.table && t.schema === relationship.schema ));
+                     for (let column of columnsWithFK) { 
+
+                        let tblRel=tablesObj.find(({schema, name})=> column.relationship.schema == schema && 
+                        column.relationship.table == name 
+                         );
+
+                        ctx.beginPath();
+                        ctx.moveTo(table.position.x, table.getColumnPosition(column.name));
+                        ctx.lineTo(tblRel.position.x, tblRel.getColumnPosition(column.relationship.column));
+                        ctx.strokeStyle = 'red';
+                        ctx.stroke();
+                        ctx.strokeStyle = 'black';
+                     }
+                    
+                }
+            }
+        }
+
+        canvas.addEventListener('mousedown', function(e) {
+            for(let tbl of tablesObj) {
+                if(e.clientX >= tbl.position.x 
+                    && e.clientX <= tbl.position.x + tbl.cellWidth
+                    && e.clientY >= tbl.position.y 
+                    && e.clientY <= tbl.position.y + tbl.cellHeight * tbl.diagramColumnElements.length) {
+                
+                        tbl.drag = true;
+                }
+            }
+        });
+
+        // Evento mouseup
+        canvas.addEventListener('mouseup', function(e) {
+            for(let tbl of tablesObj) {
+                tbl.drag = false;
+            }
+        });
+
+        // Evento mousemove
+        canvas.addEventListener('mousemove', function(e) {
+            for(let tbl of tablesObj) {
+                if(tbl.drag) {
+                    tbl.position.x = e.clientX - tbl.cellWidth / 2;
+                    tbl.position.y = e.clientY - tbl.cellHeight * tbl.diagramColumnElements.length / 2;
+                    draw();
+                }
+            }
+        });
+
+
+         draw();
+    </script>
+</body>
+</html>
+  `;
 }
