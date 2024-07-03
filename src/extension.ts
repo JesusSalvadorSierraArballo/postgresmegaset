@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { Database, PostgresProvider } from './postgresStructure';
 import { Storage } from './repositories/storage';
 import { PgConnect } from './pgconnect';
+import { Procedure } from './schemaTreeItems/Procedure';
 import { obtenerHtmlParaWebview } from './Webview/queryResults';
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -22,9 +23,18 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	vscode.commands.registerCommand('postgresqlmegaset.refreshEntry', () =>
-    postgresProvider.refresh()
-  );
+	  postgresProvider.refresh()
+);
 
+const getProcedureSource = vscode.commands.registerCommand('postgresqlmegaset.getProcedureSource',  async (procedure: Procedure) => {
+	vscode.window.showInformationMessage(`postgresqlmegaset.getProcedureSource ${procedure.label} ${typeof procedure}`);
+		const source = await procedure.getSource();
+		const file = await vscode.workspace.openTextDocument({ content: source, language: 'sql' });
+    const editor = await vscode.window.showTextDocument(file);
+		//documentInstanceMap.set(editor.document, procedure.);
+});
+
+	
 	vscode.commands.registerCommand('postgresqlmegaset.runSentence', async () => {
 		let editor = vscode.window.activeTextEditor;
 		if (editor) {
@@ -102,9 +112,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	//TODO
-	const getTableCode = vscode.commands.registerCommand('postgresqlmegaset.getTableCode', (elemento) => {
-    vscode.window.showInformationMessage('Información copiada al portapapeles');
-  });
+
 
 	//TODO: add context instance to file
 	const newFile = vscode.commands.registerCommand('postgresqlmegaset.newFile', async (element: Database) => {
@@ -113,7 +121,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		documentInstanceMap.set(editor.document, element);
   });
 
-	context.subscriptions.push(disposable, messa, dropAllInstances, newFile, getTableCode);
+	context.subscriptions.push(disposable, messa, dropAllInstances, newFile,  getProcedureSource);
 	vscode.window.registerTreeDataProvider('schemaTree', postgresProvider);
 }
 

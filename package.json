@@ -38,6 +38,10 @@
       {
         "command": "postgresqlmegaset.runSentence",
         "title": "Postgres Mega Set: Run sentense"
+      },
+      {
+        "command": "postgresqlmegaset.getProcedureSource",
+        "title": "Postgres Mega Set: Get procedure source"
       }
     ],
     "viewsContainers": {
@@ -82,6 +86,10 @@
         {
           "command": "postgresqlmegaset.newFile",
           "when": "view == schemaTree && viewItem == database"
+        },
+        {
+          "command": "postgresqlmegaset.getProcedureSource",
+          "when": "view == schemaTree && viewItem == procedure"
         }
       ]
     },
