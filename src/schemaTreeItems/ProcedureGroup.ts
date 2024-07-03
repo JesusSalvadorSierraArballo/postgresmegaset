@@ -18,12 +18,12 @@ export class ProcedureGroup extends vscode.TreeItem implements CustomTree {
   getChildrens = async () => {
     const procedures = await new ConnectionInfo(new PgConnect(this.server.user, this.server.password, this.server.host, this.server.port, this.server.database))
         .getStoreProcedure(this.schema);
-      let dep = procedures.rows.map((p: { function_name: string; })=> new Procedure(p.function_name, vscode.TreeItemCollapsibleState.Collapsed, this.server));
+      let dep = procedures.rows.map((p: { function_name: string; })=> new Procedure(p.function_name, vscode.TreeItemCollapsibleState.Collapsed, this.server, this.schema));
       return Promise.resolve(dep);
   };
 
   iconPath = {
-    light: path.join(__filename, '..','..', 'src', 'assets', 'light', 'database.svg'), //TODO FIX THAT ICON COLOR
-    dark: path.join(__filename, '..','..', 'src', 'assets', 'dark', 'procedure.svg')
+    light: path.join(__filename, '..','..','..', 'src', 'assets', 'light', 'database.svg'), //TODO FIX THAT ICON COLOR
+    dark: path.join(__filename, '..','..', '..','src', 'assets', 'dark', 'procedure.svg')
   };
 }

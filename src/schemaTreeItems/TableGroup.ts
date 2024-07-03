@@ -18,12 +18,12 @@ export class TableGroup extends vscode.TreeItem implements CustomTree {
   getChildrens = async () => {
     const tables = await new ConnectionInfo(new PgConnect(this.server.user, this.server.password, this.server.host, this.server.port, this.server.database))
         .getTables(this.schema);
-      let dep = tables.rows.map((t: { table_name: string; })=> new Table(t.table_name, vscode.TreeItemCollapsibleState.None, this.server));
+      let dep = tables.rows.map((t: { table_name: string; })=> new Table(t.table_name, vscode.TreeItemCollapsibleState.None, this.server, this.schema));
       return Promise.resolve(dep);
   };
 
   iconPath = {
-    light: path.join(__filename, '..','..', 'src', 'assets', 'light', 'table.svg'), //TODO FIX THAT ICON COLOR
-    dark: path.join(__filename, '..','..', 'src', 'assets', 'dark', 'table.svg')
+    light: path.join(__filename, '..', '..', '..', 'src', 'assets', 'light', 'table.svg'), //TODO FIX THAT ICON COLOR
+    dark: path.join(__filename, '..', '..', '..', 'src', 'assets', 'dark', 'table.svg')
   };
 }

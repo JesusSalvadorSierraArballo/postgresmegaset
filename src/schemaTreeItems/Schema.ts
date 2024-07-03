@@ -21,7 +21,7 @@ export class Schema extends vscode.TreeItem implements CustomTree {
   
 
   iconPath = {
-    light: path.join(__filename, '..','..', 'src', 'assets', 'light', 'schema.svg'), //TODO FIX THAT ICON COLOR
-    dark: path.join(__filename, '..','..', 'src', 'assets', 'dark', 'schema.svg')
+    light: path.join(__filename, '..','..','..', 'src', 'assets', 'light', 'schema.svg'), //TODO FIX THAT ICON COLOR
+    dark: path.join(__filename, '..','..','..', 'src', 'assets', 'dark', 'schema.svg')
   };
 }
