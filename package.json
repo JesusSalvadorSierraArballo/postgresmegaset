@@ -40,6 +40,10 @@
         "title": "Postgres Mega Set: Run sentense"
       },
       {
+        "command": "postgresqlmegaset.addTableToER",
+        "title": "Postgres Mega Set: open wb"
+      },
+      {
         "command": "postgresqlmegaset.getProcedureSource",
         "title": "Postgres Mega Set: Get procedure source"
       }
@@ -83,6 +87,10 @@
         }
       ],
       "view/item/context": [
+        {
+          "command": "postgresqlmegaset.addTableToER",
+          "when": "view == schemaTree && viewItem == table"
+        },
         {
           "command": "postgresqlmegaset.newFile",
           "when": "view == schemaTree && viewItem == database"

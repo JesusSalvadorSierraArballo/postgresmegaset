@@ -27,20 +27,17 @@ export class Table extends vscode.TreeItem {
     let tb: TableER = {
       schema: this.schema,
       name: this.label,
-      columns: [
-        tableStructure.rows.map((c: any)=>( {
-          name: c.column_name,
-          datatype: c.dataType,
-          isPrimaryKey: c.isPrimary,
-          isForeignKey: c.isForeignKey,
-          relationship:{
-            schema: c.schema,
-            table: c.table,
-            column: c.column,
-          }
-        }))
-      ],
-      
+      columns: tableStructure.rows.map((c: any) => ({
+        name: c.column,
+        datatype: c.dataType,
+        isPrimaryKey: Boolean(c.isPrimaryKey),
+        isForeignKey: Boolean(c.isForeignKey),
+        relationship: {
+          schema: c.schemaDestination,
+          table: c.tableDestination,
+          column: c.columna_destino,
+        }
+      }))
     };
     return Promise.resolve(tb);
   }

@@ -24,9 +24,9 @@ export function obtenerHtmlParaWebview(headers: string[], body: Array<Record<str
         </html>`;
   }
   
-export function getWebviewContent(tables: TableER[]) {
+export function getERDiagram(tables: TableER[]) {
   return `
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Tabla Arrastrable en Canvas</title>
@@ -55,6 +55,10 @@ export function getWebviewContent(tables: TableER[]) {
                 this.cellHeight = 16;          //el doble del font size
                 this.drag = false;
                 this.hasForeignKey = columns.some((c)=>c.isForeignKey);
+                this.size = {
+                  x: Math.max(...this.diagramColumnElements.map((s)=>s.length)) * 8 + 10,
+                  y: this.diagramColumnElements.length * 16
+                }
             }
 
             draw(ctx) {
@@ -68,7 +72,6 @@ export function getWebviewContent(tables: TableER[]) {
             }
             getColumnPosition(column) {
                 let position =this.diagramColumnElements.findIndex((e) => e === column )
-                console.log({positionY:this.position.y, index:position, column})
                 return this.position.y + (position * 16) + 8
             }
 
@@ -83,15 +86,30 @@ export function getWebviewContent(tables: TableER[]) {
 
         let tables = ${JSON.stringify(tables)};
 
-
         var canvas = document.getElementById('miCanvas');
         var ctx = canvas.getContext('2d');
+        
         tablesObj = []
+        let currentTablePositionX = 0;
+        let currentTablePositionY = 0;
+        let inFile = 1;
+        let sizeInFile=[];
 
         for(let table of tables) {
-            let newTb = new tb(table);
+            let newTb = new tb({...table, position:{x:currentTablePositionX, y:currentTablePositionY}});
             newTb.draw(ctx);
             tablesObj = [...tablesObj, newTb];
+
+            currentTablePositionX += newTb.getSize().x;
+            if(inFile%5 === 0) {
+              currentTablePositionY += Math.max(...sizeInFile) +10; //gap 10
+              sizeInFile = [];
+              currentTablePositionX = 0;
+            } else {
+              sizeInFile = [...sizeInFile, newTb.size.y];
+            }
+            inFile++;
+            //currentTablePositionY += newTb.getSize().y;
         }
 
         function draw() {
@@ -114,7 +132,7 @@ export function getWebviewContent(tables: TableER[]) {
                         ctx.beginPath();
                         ctx.moveTo(table.position.x, table.getColumnPosition(column.name));
                         ctx.lineTo(tblRel.position.x, tblRel.getColumnPosition(column.relationship.column));
-                        ctx.strokeStyle = 'red';
+                        ctx.strokeStyle = 'black';
                         ctx.stroke();
                         ctx.strokeStyle = 'black';
                      }

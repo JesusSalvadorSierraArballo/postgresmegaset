@@ -2,14 +2,18 @@ import * as vscode from 'vscode';
 import { Database, PostgresProvider } from './postgresStructure';
 import { Storage } from './repositories/storage';
 import { PgConnect } from './pgconnect';
+import { getERDiagram, obtenerHtmlParaWebview } from './Webview/queryResults';
+import { WorkspaceState } from './repositories/workspaceState';
+import { Table } from './schemaTreeItems/Table';
 import { Procedure } from './schemaTreeItems/Procedure';
-import { obtenerHtmlParaWebview } from './Webview/queryResults';
 
 export async function activate(context: vscode.ExtensionContext) {
 	const myStorage = new Storage(context);
+	const myEr = new WorkspaceState(context);
 	const postgresProvider = new PostgresProvider(context);
-	let panel: vscode.WebviewPanel | undefined;
+	let panelResults: vscode.WebviewPanel | undefined;
 	const documentInstanceMap = new Map<vscode.TextDocument, Database>();
+	let panelER: vscode.WebviewPanel | undefined; 
 
 	const messa = vscode.commands.registerCommand('postgresqlmegaset.showConnections', async () => {
 		const conn = await myStorage.getConnections();
@@ -23,8 +27,38 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	vscode.commands.registerCommand('postgresqlmegaset.refreshEntry', () =>
-	  postgresProvider.refresh()
+	postgresProvider.refresh()
 );
+
+const addTableToER = vscode.commands.registerCommand('postgresqlmegaset.addTableToER', async (table: Table) => {
+	vscode.window.showInformationMessage(`${table.label} ${typeof table}`);
+	const tableer = await table.toER();
+	await myEr.addTable(tableer);
+	let allMyTables = await myEr.getTablesInER();
+
+	if (panelER && !panelER.visible) {
+	  panelER.dispose();
+	  panelER = undefined;
+	}
+	
+	if (panelER) {
+			panelER.webview.html = getERDiagram(allMyTables);
+	} else {
+			panelER = vscode.window.createWebviewPanel(
+				'Er',
+				'Er',
+				vscode.ViewColumn.Beside,
+				{
+						enableScripts: true
+				}
+		);
+
+		panelER.webview.html = getERDiagram(allMyTables);
+			panelER.onDidDispose(() => {
+					panelER = undefined;
+			}, null, context.subscriptions);
+	}
+});
 
 const getProcedureSource = vscode.commands.registerCommand('postgresqlmegaset.getProcedureSource',  async (procedure: Procedure) => {
 	vscode.window.showInformationMessage(`postgresqlmegaset.getProcedureSource ${procedure.label} ${typeof procedure}`);
@@ -55,28 +89,28 @@ const getProcedureSource = vscode.commands.registerCommand('postgresqlmegaset.ge
 					datasets = [...datasets, res];
 			}
 			
-			if (panel && !panel.visible) {
-				panel.dispose();
-				panel = undefined;
+			if (panelResults && !panelResults.visible) {
+				panelResults.dispose();
+				panelResults = undefined;
 			}
 			
-			if (panel) {
-				panel.webview.html = "";
+			if (panelResults) {
+				panelResults.webview.html = "";
 				for(let res of datasets) {
-					panel.webview.html += obtenerHtmlParaWebview(res.fields.map(({name}:{name: string}) => name ), res.rows);
+					panelResults.webview.html += obtenerHtmlParaWebview(res.fields.map(({name}:{name: string}) => name ), res.rows);
 				}
 			} else {
-					panel = vscode.window.createWebviewPanel(
+					panelResults = vscode.window.createWebviewPanel(
 							'resultsWebview',  
 							'Results', 
 							vscode.ViewColumn.Beside, 
 							{}
 					);
 					for(let res of datasets) {
-						panel.webview.html += obtenerHtmlParaWebview(res.fields.map(({name}: {name: string}) => name ), res.rows);
+						panelResults.webview.html += obtenerHtmlParaWebview(res.fields.map(({name}: {name: string}) => name ), res.rows);
 					}
-					panel.onDidDispose(() => {
-							panel = undefined;
+					panelResults.onDidDispose(() => {
+							panelResults = undefined;
 					}, null, context.subscriptions);
 			}
 		}
@@ -112,7 +146,11 @@ const getProcedureSource = vscode.commands.registerCommand('postgresqlmegaset.ge
 	});
 
 	//TODO
-
+	const getTableCode = vscode.commands.registerCommand('postgresqlmegaset.getTableCode', async (element) => {
+		const file = await vscode.workspace.openTextDocument({ content: '', language: 'sql' });
+    const editor = await vscode.window.showTextDocument(file);
+		documentInstanceMap.set(editor.document, element);
+  });
 
 	//TODO: add context instance to file
 	const newFile = vscode.commands.registerCommand('postgresqlmegaset.newFile', async (element: Database) => {
@@ -121,7 +159,7 @@ const getProcedureSource = vscode.commands.registerCommand('postgresqlmegaset.ge
 		documentInstanceMap.set(editor.document, element);
   });
 
-	context.subscriptions.push(disposable, messa, dropAllInstances, newFile,  getProcedureSource);
+	context.subscriptions.push(disposable, messa, dropAllInstances, newFile, getTableCode, addTableToER, getProcedureSource);
 	vscode.window.registerTreeDataProvider('schemaTree', postgresProvider);
 }
 
