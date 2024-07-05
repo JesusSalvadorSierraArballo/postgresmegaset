@@ -6,6 +6,7 @@ import { getERDiagram, obtenerHtmlParaWebview } from './Webview/queryResults';
 import { WorkspaceState } from './repositories/workspaceState';
 import { Table } from './schemaTreeItems/Table';
 import { Procedure } from './schemaTreeItems/Procedure';
+import { Instance } from './schemaTreeItems/Instance';
 
 export async function activate(context: vscode.ExtensionContext) {
 	const myStorage = new Storage(context);
@@ -26,9 +27,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage(JSON.stringify(conn));
 	});
 
-	vscode.commands.registerCommand('postgresqlmegaset.refreshEntry', () =>
-	postgresProvider.refresh()
-);
+	vscode.commands.registerCommand('postgresqlmegaset.refreshEntry', () => postgresProvider.refresh());
 
 const addTableToER = vscode.commands.registerCommand('postgresqlmegaset.addTableToER', async (table: Table) => {
 	vscode.window.showInformationMessage(`${table.label} ${typeof table}`);
@@ -152,14 +151,19 @@ const getProcedureSource = vscode.commands.registerCommand('postgresqlmegaset.ge
 		documentInstanceMap.set(editor.document, element);
   });
 
-	//TODO: add context instance to file
 	const newFile = vscode.commands.registerCommand('postgresqlmegaset.newFile', async (element: Database) => {
     const file = await vscode.workspace.openTextDocument({ content: '', language: 'sql' });
     const editor = await vscode.window.showTextDocument(file);
 		documentInstanceMap.set(editor.document, element);
   });
 
-	context.subscriptions.push(disposable, messa, dropAllInstances, newFile, getTableCode, addTableToER, getProcedureSource);
+	const deleteInstance = vscode.commands.registerCommand('postgresqlmegaset.deleteInstance', async (instance: Instance) => {
+		await myStorage.dropConnections(instance);
+		postgresProvider.refresh();
+	}
+);
+
+	context.subscriptions.push(disposable, messa, dropAllInstances, newFile, getTableCode, addTableToER, getProcedureSource, deleteInstance);
 	vscode.window.registerTreeDataProvider('schemaTree', postgresProvider);
 }
 

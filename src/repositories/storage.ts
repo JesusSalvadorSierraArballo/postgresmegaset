@@ -1,9 +1,16 @@
 import { ExtensionContext } from "vscode";
+import { Instance } from "../schemaTreeItems/Instance";
 
 export class Storage {
     static storeKeys = {
         CONNECTIONS: 'connections'
     };
+    
+	async dropConnections(instance: Instance) {
+        const connections = await this.getConnections();
+        this.context.secrets.store(Storage.storeKeys.CONNECTIONS, 
+            JSON.stringify(connections.filter((c)=>c.host !== instance.server.host)));
+	}
 
     constructor(context: ExtensionContext) { 
         this.context = context;

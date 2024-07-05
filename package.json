@@ -15,7 +15,8 @@
     "commands": [
       {
         "command": "postgresqlmegaset.setConnection",
-        "title": "Postgres Mega Set: Add new connection"
+        "title": "Postgres Mega Set: Add new connection",
+        "icon": "src/assets/dark/plus.svg"
       },
       {
         "command": "postgresqlmegaset.showConnections",
@@ -46,6 +47,10 @@
       {
         "command": "postgresqlmegaset.getProcedureSource",
         "title": "Postgres Mega Set: Get procedure source"
+      },
+      {
+        "command": "postgresqlmegaset.deleteInstance",
+        "title": "Postgres Mega Set: Delete instance"
       }
     ],
     "viewsContainers": {
@@ -76,17 +81,21 @@
     "menus": {
       "view/title": [
         {
-          "command": "postgresqlmegaset.dropAllConnections",
+          "command": "postgresqlmegaset.refreshEntry",
           "when": "view == schemaTree",
           "group": "navigation"
         },
         {
-          "command": "postgresqlmegaset.refreshEntry",
+          "command": "postgresqlmegaset.setConnection",
           "when": "view == schemaTree",
           "group": "navigation"
         }
       ],
       "view/item/context": [
+        {
+          "command": "postgresqlmegaset.deleteInstance",
+          "when": "view == schemaTree && viewItem == instance"
+        },
         {
           "command": "postgresqlmegaset.addTableToER",
           "when": "view == schemaTree && viewItem == table"
