@@ -1,8 +1,9 @@
 {
   "name": "postgresqlmegaset",
-  "displayName": "PostgreSQL Mega Set",
-  "description": "just an example",
   "version": "0.0.1",
+  "displayName": "PostgreSQL Mega Set",
+  "description": "Help to manage your databases",
+  "icon": "src/assets/logo.png",
   "engines": {
     "vscode": "^1.89.0"
   },
