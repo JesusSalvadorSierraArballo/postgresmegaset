@@ -21,8 +21,8 @@ export class Database extends vscode.TreeItem implements CustomTree {
   };
 
   iconPath = {
-    light: path.join(__filename, '..', '..','..', 'src', 'assets', 'light', 'database.svg'), //TODO FIX THAT ICON COLOR
-    dark: path.join(__filename, '..', '..','..', 'src', 'assets', 'dark', 'database.svg')
+    light: path.join(__filename, 'assets', 'light', 'database.svg'), //TODO FIX THAT ICON COLOR
+    dark: path.join(__dirname, '..', '..', 'assets', 'dark', 'database.svg')
   };
 
   contextValue = 'database';

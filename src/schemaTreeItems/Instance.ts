@@ -25,8 +25,8 @@ export class Instance extends vscode.TreeItem implements CustomTree {
   };
 
   iconPath = {
-    light: path.join(__filename, '..','..','..', 'src', 'assets', 'light', 'database.svg'), //TODO FIX THAT ICON COLOR
-    dark: path.join(__filename, '..','..','..', 'src', 'assets', 'dark', 'data-cluster.svg')
+    light: path.join(__dirname, '..','assets', 'light', 'database.svg'), //TODO FIX THAT ICON COLOR
+    dark: path.join(__dirname, '..', '..', 'assets', 'dark', 'data-cluster.svg')
   };
 
   contextValue = 'instance';

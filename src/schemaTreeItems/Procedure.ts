@@ -16,8 +16,8 @@ export class Procedure extends vscode.TreeItem {
     }
 
   iconPath = {
-    light: path.join(__filename, '..','..','..', 'src', 'assets', 'light', 'database.svg'), //TODO FIX THAT ICON COLOR
-    dark: path.join(__filename, '..','..','..','src', 'assets', 'dark', 'procedure.svg')
+    light: path.join(__filename, '..',  '..','..','..', 'assets', 'light', 'database.svg'), //TODO FIX THAT ICON COLOR
+    dark: path.join(__dirname, '..', '..', 'assets', 'dark', 'procedure.svg')
   };
   
   async getSource(): Promise<string> {

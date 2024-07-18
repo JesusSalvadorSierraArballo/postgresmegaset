@@ -1,9 +1,9 @@
 {
   "name": "postgresqlmegaset",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "displayName": "PostgreSQL Mega Set",
   "description": "Help to manage your databases",
-  "icon": "src/assets/logo.png",
+  "icon": "assets/logo.png",
   "engines": {
     "vscode": "^1.89.0"
   },
@@ -17,7 +17,7 @@
       {
         "command": "postgresqlmegaset.setConnection",
         "title": "Postgres Mega Set: Add new connection",
-        "icon": "src/assets/dark/plus.svg"
+        "icon": "assets/dark/plus.svg"
       },
       {
         "command": "postgresqlmegaset.showConnections",
@@ -30,12 +30,12 @@
       {
         "command": "postgresqlmegaset.refreshEntry",
         "title": "Postgres Mega Set: Refresh",
-        "icon": "src/assets/dark/refresh.svg"
+        "icon": "assets/dark/refresh.svg"
       },
       {
         "command": "postgresqlmegaset.newFile",
         "title": "Postgres Mega Set: Create new file",
-        "icon": "src/assets/dark/refresh.svg"
+        "icon": "assets/dark/refresh.svg"
       },
       {
         "command": "postgresqlmegaset.runSentence",
@@ -59,7 +59,7 @@
         {
           "id": "postgres-mega-set",
           "title": "Postgres mega set",
-          "icon": "src/assets/postgresql.svg"
+          "icon": "assets/postgresql.svg"
         }
       ]
     },
@@ -67,8 +67,7 @@
       "postgres-mega-set": [
         {
           "id": "schemaTree",
-          "name": "",
-          "icon": "src/assets/dep.svg",
+          "name": "Schema tree",
           "contextualTitle": "Package Explorer"
         }
       ]
