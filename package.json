@@ -4,6 +4,12 @@
   "displayName": "PostgreSQL Mega Set",
   "description": "Help to manage your databases",
   "icon": "assets/logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JesusSalvadorSierraArballo/postgresmegaset"
+  },
+  "publisher": "jesssierra",
+  "keywords": ["<postgres>"],
   "engines": {
     "vscode": "^1.89.0"
   },
