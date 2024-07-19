@@ -1,8 +1,9 @@
 {
   "name": "postgresqlmegaset",
+  "version": "0.0.2",
   "displayName": "PostgreSQL Mega Set",
-  "description": "just an example",
-  "version": "0.0.1",
+  "description": "Help to manage your databases",
+  "icon": "assets/logo.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/JesusSalvadorSierraArballo/postgresmegaset"
@@ -21,7 +22,8 @@
     "commands": [
       {
         "command": "postgresqlmegaset.setConnection",
-        "title": "Postgres Mega Set: Add new connection"
+        "title": "Postgres Mega Set: Add new connection",
+        "icon": "assets/dark/plus.svg"
       },
       {
         "command": "postgresqlmegaset.showConnections",
@@ -34,12 +36,12 @@
       {
         "command": "postgresqlmegaset.refreshEntry",
         "title": "Postgres Mega Set: Refresh",
-        "icon": "src/assets/dark/refresh.svg"
+        "icon": "assets/dark/refresh.svg"
       },
       {
         "command": "postgresqlmegaset.newFile",
         "title": "Postgres Mega Set: Create new file",
-        "icon": "src/assets/dark/refresh.svg"
+        "icon": "assets/dark/refresh.svg"
       },
       {
         "command": "postgresqlmegaset.runSentence",
@@ -52,6 +54,10 @@
       {
         "command": "postgresqlmegaset.getProcedureSource",
         "title": "Postgres Mega Set: Get procedure source"
+      },
+      {
+        "command": "postgresqlmegaset.deleteInstance",
+        "title": "Postgres Mega Set: Delete instance"
       }
     ],
     "viewsContainers": {
@@ -59,7 +65,7 @@
         {
           "id": "postgres-mega-set",
           "title": "Postgres mega set",
-          "icon": "src/assets/postgresql.svg"
+          "icon": "assets/postgresql.svg"
         }
       ]
     },
@@ -67,8 +73,7 @@
       "postgres-mega-set": [
         {
           "id": "schemaTree",
-          "name": "",
-          "icon": "src/assets/dep.svg",
+          "name": "Schema tree",
           "contextualTitle": "Package Explorer"
         }
       ]
@@ -82,17 +87,21 @@
     "menus": {
       "view/title": [
         {
-          "command": "postgresqlmegaset.dropAllConnections",
+          "command": "postgresqlmegaset.refreshEntry",
           "when": "view == schemaTree",
           "group": "navigation"
         },
         {
-          "command": "postgresqlmegaset.refreshEntry",
+          "command": "postgresqlmegaset.setConnection",
           "when": "view == schemaTree",
           "group": "navigation"
         }
       ],
       "view/item/context": [
+        {
+          "command": "postgresqlmegaset.deleteInstance",
+          "when": "view == schemaTree && viewItem == instance"
+        },
         {
           "command": "postgresqlmegaset.addTableToER",
           "when": "view == schemaTree && viewItem == table"

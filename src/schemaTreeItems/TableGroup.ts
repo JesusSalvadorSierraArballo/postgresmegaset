@@ -23,7 +23,7 @@ export class TableGroup extends vscode.TreeItem implements CustomTree {
   };
 
   iconPath = {
-    light: path.join(__filename, '..', '..', '..', 'src', 'assets', 'light', 'table.svg'), //TODO FIX THAT ICON COLOR
-    dark: path.join(__filename, '..', '..', '..', 'src', 'assets', 'dark', 'table.svg')
+    light: path.join(__filename, '..', '..', '..', '..', 'assets', 'light', 'table.svg'), //TODO FIX THAT ICON COLOR
+    dark: path.join(__dirname, '..', '..', 'assets', 'dark', 'table.svg')
   };
 }
