@@ -7,6 +7,15 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 - Initial release
+
+### [0.0.1] 
+
+* Feature: Connect to diferents servers
+* Feature: Open new file to make queries in each server
+* Feature: Display ER
+* Feature: Add tables to ER
+* Feature: get function source
+* 
 ## [0.0.3] - 2023-08-09
 
 ### Added

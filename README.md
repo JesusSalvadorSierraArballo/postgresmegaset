@@ -26,15 +26,13 @@ This extension contributes the following settings:
 ## Known Issues
 
 * Color in ER must to change
-* Can't delete a instance conection
-* Can't delete a table in er
 * When a table is added in a er the er is re order
 
 ## Release Notes
 
 First version!
 
-### 1.0.0
+### 0.0.1
 
 * Feature: Connect to diferents servers
 * Feature: Open new file to make queries in each server
@@ -46,9 +44,15 @@ First version!
 
 Fixed issue #.
 
-### 1.1.0
+### 0.0.3
 
-Added features X, Y, and Z.
+### Added
 
+* Command deleteAllTableInER
+* Command deleteTableInER
+
+### Fixed
+
+- Diagram draw
 ---
 
