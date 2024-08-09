@@ -70,11 +70,16 @@ export function getERDiagram(tables: TableER[]) {
                         y + this.cellHeight/2 + 4 ); //la mitad del tamaño del espacio * la mitad del tamaño de letra
                 }
             }
+
             getColumnPosition(column) {
                 let position =this.diagramColumnElements.findIndex((e) => e === column )
                 return this.position.y + (position * 16) + 8
             }
 
+            getSize() {
+              return this.size;
+            };
+            
             toString() {
                 console.log({
                     schema:this.schema,
