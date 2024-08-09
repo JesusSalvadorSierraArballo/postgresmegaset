@@ -1,6 +1,6 @@
 {
   "name": "postgresqlmegaset",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "displayName": "PostgreSQL Mega Set",
   "description": "Help to manage your databases",
   "icon": "assets/logo.png",
@@ -49,7 +49,15 @@
       },
       {
         "command": "postgresqlmegaset.addTableToER",
-        "title": "Postgres Mega Set: open wb"
+        "title": "Postgres Mega Set: Add to diagram"
+      },
+      {
+        "command": "postgresqlmegaset.deleteAllTableInER",
+        "title": "Postgres Mega Set: Delete all tables in ER"
+      },
+      {
+        "command": "postgresqlmegaset.deleteTableInER",
+        "title": "Postgres Mega Set: Delete from diagram"
       },
       {
         "command": "postgresqlmegaset.getProcedureSource",
@@ -104,6 +112,10 @@
         },
         {
           "command": "postgresqlmegaset.addTableToER",
+          "when": "view == schemaTree && viewItem == table"
+        },
+        {
+          "command": "postgresqlmegaset.deleteTableInER",
           "when": "view == schemaTree && viewItem == table"
         },
         {

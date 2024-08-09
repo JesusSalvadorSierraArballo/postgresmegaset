@@ -21,6 +21,12 @@ export class WorkspaceState {
         const isAdded = tables.some((t) =>  tableER.schema === t.schema && tableER.name === t.name );
         isAdded || await this.context.workspaceState.update(WorkspaceState.storeKeys.TABLES_IN_ER, [...tables, tableER]);
     }
+
+    async deleteTable(tableER: TableER) {
+        const tables = await this.getTablesInER() || [];
+        const newTables = tables.filter((t) => !(tableER.schema === t.schema && tableER.name === t.name) );
+        await this.context.workspaceState.update(WorkspaceState.storeKeys.TABLES_IN_ER, newTables);
+    }
       
       async dropAllTablesInER() {
         await this.context.workspaceState.update(WorkspaceState.storeKeys.TABLES_IN_ER, []);

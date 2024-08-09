@@ -7,3 +7,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 - Initial release
+## [0.0.3] - 2023-08-09
+
+### Added
+
+- Command deleteAllTableInER
+- Command deleteTableInER
+
+### Fixed
+
+- Diagram draw

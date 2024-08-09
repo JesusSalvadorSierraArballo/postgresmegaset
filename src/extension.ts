@@ -30,9 +30,41 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand('postgresqlmegaset.refreshEntry', () => postgresProvider.refresh());
 
 const addTableToER = vscode.commands.registerCommand('postgresqlmegaset.addTableToER', async (table: Table) => {
-	vscode.window.showInformationMessage(`${table.label} ${typeof table}`);
 	const tableer = await table.toER();
 	await myEr.addTable(tableer);
+	let allMyTables = await myEr.getTablesInER();
+
+	if (panelER && !panelER.visible) {
+	  panelER.dispose();
+	  panelER = undefined;
+	}
+	
+	if (panelER) {
+			panelER.webview.html = getERDiagram(allMyTables);
+	} else {
+			panelER = vscode.window.createWebviewPanel(
+				'Er',
+				'Er',
+				vscode.ViewColumn.Beside,
+				{
+						enableScripts: true
+				}
+		);
+
+		panelER.webview.html = getERDiagram(allMyTables);
+			panelER.onDidDispose(() => {
+					panelER = undefined;
+			}, null, context.subscriptions);
+	}
+});
+
+const deleteAllTableToER = vscode.commands.registerCommand('postgresqlmegaset.deleteAllTableInER', async () => {
+	await myEr.dropAllTablesInER();
+});
+
+const deleteTableInER = vscode.commands.registerCommand('postgresqlmegaset.deleteTableInER', async (table: Table) => {
+	const tableer = await table.toER();
+	await myEr.deleteTable(tableer);
 	let allMyTables = await myEr.getTablesInER();
 
 	if (panelER && !panelER.visible) {
@@ -163,7 +195,18 @@ const getProcedureSource = vscode.commands.registerCommand('postgresqlmegaset.ge
 	}
 );
 
-	context.subscriptions.push(disposable, messa, dropAllInstances, newFile, getTableCode, addTableToER, getProcedureSource, deleteInstance);
+	context.subscriptions.push(
+		disposable, 
+		messa, 
+		dropAllInstances, 
+		newFile, 
+		getTableCode, 
+		addTableToER, 
+		deleteTableInER,
+		deleteAllTableToER,
+		getProcedureSource, 
+		deleteInstance
+	);
 	vscode.window.registerTreeDataProvider('schemaTree', postgresProvider);
 }
 
