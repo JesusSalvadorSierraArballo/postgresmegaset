@@ -31,3 +31,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed
 
 - Diagram colors, now consider vscode theme
+- 
+## [0.0.5] - 2023-08-13
+
+### Added 
+
+- Add quality to er diagram.
+
+### Fixed 
+- Diagram container size  
+
