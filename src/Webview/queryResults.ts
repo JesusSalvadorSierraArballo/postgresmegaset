@@ -30,10 +30,25 @@ export function getERDiagram(tables: TableER[]) {
 <html>
 <head>
     <title>Tabla Arrastrable en Canvas</title>
+      <style>
+        .vscode-style {
+            color: var(--vscode-editor-foreground); 
+        }
+    </style>
 </head>
 <body>
-    <canvas id="miCanvas" width="800" height="800"></canvas>
+    <canvas id="miCanvas" width="1000" height="1000"></canvas>
     <script>
+
+        function getCSSPropertyValue(className, property) {
+            const element = document.createElement('div');
+            element.className = className;
+            document.body.appendChild(element);
+            const style = window.getComputedStyle(element);
+            const value = style.getPropertyValue(property);
+            document.body.removeChild(element);
+            return value.trim();
+        }
 
         class tb {
             constructor({schema, name, columns, position = {x:0, y:0}}) {
@@ -93,6 +108,8 @@ export function getERDiagram(tables: TableER[]) {
 
         var canvas = document.getElementById('miCanvas');
         var ctx = canvas.getContext('2d');
+        ctx.strokeStyle = getCSSPropertyValue("vscode-style", "color");
+        ctx.fillStyle = getCSSPropertyValue("vscode-style", "color");
         
         tablesObj = []
         let currentTablePositionX = 0;
@@ -137,9 +154,7 @@ export function getERDiagram(tables: TableER[]) {
                         ctx.beginPath();
                         ctx.moveTo(table.position.x, table.getColumnPosition(column.name));
                         ctx.lineTo(tblRel.position.x, tblRel.getColumnPosition(column.relationship.column));
-                        ctx.strokeStyle = 'black';
                         ctx.stroke();
-                        ctx.strokeStyle = 'black';
                      }
                     
                 }
@@ -175,8 +190,6 @@ export function getERDiagram(tables: TableER[]) {
                 }
             }
         });
-
-
          draw();
     </script>
 </body>

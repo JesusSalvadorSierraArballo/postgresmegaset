@@ -26,3 +26,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed
 
 - Diagram draw
+## [0.0.4] - 2023-08-13
+
+### Fixed
+
+- Diagram colors, now consider vscode theme
