@@ -41,3 +41,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed 
 - Diagram container size  
 
+## [0.0.5] - 2023-08-13
+
+### Fix
+  - Improve line drawling in er diagram

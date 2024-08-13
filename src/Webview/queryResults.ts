@@ -177,9 +177,11 @@ export function getERDiagram(tables: TableER[]) {
                         column.relationship.table == name 
                          );
 
+                        let pkTblIsInRigth = table.position.x >= (tblRel.position.x + tblRel.cellWidth);
+
                         ctx.beginPath();
-                        ctx.moveTo(table.position.x, table.getColumnPosition(column.name));
-                        ctx.lineTo(tblRel.position.x, tblRel.getColumnPosition(column.relationship.column));
+                        ctx.moveTo(table.position.x + ( pkTblIsInRigth? 0: table.cellWidth) , table.getColumnPosition(column.name));
+                        ctx.lineTo(tblRel.position.x + ( pkTblIsInRigth? tblRel.cellWidth: 0) , tblRel.getColumnPosition(column.relationship.column));
                         ctx.stroke();
                      }
                     
