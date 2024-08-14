@@ -41,7 +41,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed 
 - Diagram container size  
 
-## [0.0.5] - 2023-08-13
+## [0.0.6] - 2023-08-13
 
 ### Fix
   - Improve line drawling in er diagram
+
+## [0.0.7] - 2023-08-13
+
+### Fix
+  - Remove duplicates columns on er

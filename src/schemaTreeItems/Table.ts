@@ -23,11 +23,13 @@ export class Table extends vscode.TreeItem {
   async toER() {
     const tableStructure = await new ConnectionInfo(new PgConnect(this.server.user, this.server.password, this.server.host, this.server.port, this.server.database))
     .getTablesStructure(this.schema, this.label);
-    //TODO FIX THE KEYS
-    let tb: TableER = {
-      schema: this.schema,
-      name: this.label,
-      columns: tableStructure.rows.map((c: any) => ({
+    //TODO FIX THE KEYS 
+    const columns = tableStructure.rows.
+      filter((c: any, index: number, self: Array<any>) =>
+        index === self.findIndex((t) => (
+          t.column === c.column && t.schema === c.schema
+        )))
+      .map((c: any) => ({
         name: c.column,
         datatype: c.dataType,
         isPrimaryKey: Boolean(c.isPrimaryKey),
@@ -37,7 +39,12 @@ export class Table extends vscode.TreeItem {
           table: c.tableDestination,
           column: c.columna_destino,
         }
-      }))
+      }));
+
+    let tb: TableER = {
+      schema: this.schema,
+      name: this.label,
+      columns
     };
     return Promise.resolve(tb);
   }
