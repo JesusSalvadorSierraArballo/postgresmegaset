@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { ConnectionInfo } from '../conectionInfo';
 import { PgConnect } from '../pgconnect';
-import { TableER } from '../types';
+import { TableStructure } from '../types';
 
 export class Table extends vscode.TreeItem {
   constructor(
@@ -20,7 +20,7 @@ export class Table extends vscode.TreeItem {
     dark: path.join(__dirname, '..', '..', 'assets', 'dark', 'table.svg')
   };
 
-  async toER() {
+  async getTableStructure() {
     const tableStructure = await new ConnectionInfo(new PgConnect(this.server.user, this.server.password, this.server.host, this.server.port, this.server.database))
     .getTablesStructure(this.schema, this.label);
     //TODO FIX THE KEYS 
@@ -41,13 +41,19 @@ export class Table extends vscode.TreeItem {
         }
       }));
 
-    let tb: TableER = {
+    let tb: TableStructure = {
       schema: this.schema,
       name: this.label,
       columns
     };
     return Promise.resolve(tb);
   }
+
+  getSelectTop = async () => 
+    {
+      const tableStructure = await (this.getTableStructure());
+      return `SELECT\n${ tableStructure.columns.map((c)=> `  "${c.name}"`).join(",\n")}\nFROM '${tableStructure.schema}'.'${tableStructure.name}'`;
+    }; 
 
   contextValue = 'table';
 }

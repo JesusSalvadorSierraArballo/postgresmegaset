@@ -30,8 +30,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand('postgresqlmegaset.refreshEntry', () => postgresProvider.refresh());
 
 const addTableToER = vscode.commands.registerCommand('postgresqlmegaset.addTableToER', async (table: Table) => {
-	const tableer = await table.toER();
-	await myEr.addTable(tableer);
+	const tableStructure = await table.getTableStructure();
+	await myEr.addTable(tableStructure);
 	let allMyTables = await myEr.getTablesInER();
 
 	if (panelER && !panelER.visible) {
@@ -63,7 +63,7 @@ const deleteAllTableToER = vscode.commands.registerCommand('postgresqlmegaset.de
 });
 
 const deleteTableInER = vscode.commands.registerCommand('postgresqlmegaset.deleteTableInER', async (table: Table) => {
-	const tableer = await table.toER();
+	const tableer = await table.getTableStructure();
 	await myEr.deleteTable(tableer);
 	let allMyTables = await myEr.getTablesInER();
 
@@ -195,6 +195,13 @@ const getProcedureSource = vscode.commands.registerCommand('postgresqlmegaset.ge
 	}
 );
 
+const getTemplateSelectTop = vscode.commands.registerCommand('postgresqlmegaset.getSelectTopTemplate',  async (table: Table) => {
+	const source = await table.getSelectTop();
+		const file = await vscode.workspace.openTextDocument({ content: source, language: 'sql' });
+    const editor = await vscode.window.showTextDocument(file);
+		//documentInstanceMap.set(editor.document, table);
+});
+
 	context.subscriptions.push(
 		disposable, 
 		messa, 
@@ -205,7 +212,8 @@ const getProcedureSource = vscode.commands.registerCommand('postgresqlmegaset.ge
 		deleteTableInER,
 		deleteAllTableToER,
 		getProcedureSource, 
-		deleteInstance
+		deleteInstance,
+		getTemplateSelectTop
 	);
 	vscode.window.registerTreeDataProvider('schemaTree', postgresProvider);
 }

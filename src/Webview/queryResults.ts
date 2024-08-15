@@ -1,4 +1,4 @@
-import { TableER } from "../types";
+import { TableStructure } from "../types";
 
 export function obtenerHtmlParaWebview(headers: string[], body: Array<Record<string, any[]>>) {
     return `
@@ -24,7 +24,7 @@ export function obtenerHtmlParaWebview(headers: string[], body: Array<Record<str
         </html>`;
   }
   
-export function getERDiagram(tables: TableER[]) {
+export function getERDiagram(tables: TableStructure[]) {
   return `
 <!DOCTYPE html>
 <html>

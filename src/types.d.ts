@@ -13,7 +13,7 @@ export interface column {
     column: string,
   }
 }
-export interface TableER {
+export interface TableStructure {
   schema: string,
   name: string,
   columns: column[]

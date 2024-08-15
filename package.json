@@ -56,6 +56,10 @@
       {
         "command": "postgresqlmegaset.deleteAllTableInER",
         "title": "Postgres Mega Set: Delete all tables in ER"
+      },   
+      {
+        "command": "postgresqlmegaset.getSelectTopTemplate",
+        "title": "Get top"
       },
       {
         "command": "postgresqlmegaset.deleteTableInER",
@@ -118,6 +122,10 @@
         },
         {
           "command": "postgresqlmegaset.deleteTableInER",
+          "when": "view == schemaTree && viewItem == table"
+        },
+        {
+          "command": "postgresqlmegaset.getSelectTopTemplate",
           "when": "view == schemaTree && viewItem == table"
         },
         {
