@@ -1,6 +1,6 @@
 {
   "name": "postgresqlmegaset",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "displayName": "PostgreSQL Mega Set",
   "description": "Help to manage your databases",
   "icon": "assets/logo.png",
@@ -60,6 +60,10 @@
       {
         "command": "postgresqlmegaset.getSelectTopTemplate",
         "title": "Get top"
+      },
+      {
+        "command": "postgresqlmegaset.getCrudTemplate",
+        "title": "Get Crud script"
       },
       {
         "command": "postgresqlmegaset.deleteTableInER",
@@ -126,6 +130,10 @@
         },
         {
           "command": "postgresqlmegaset.getSelectTopTemplate",
+          "when": "view == schemaTree && viewItem == table"
+        },
+        {
+          "command": "postgresqlmegaset.getCrudTemplate",
           "when": "view == schemaTree && viewItem == table"
         },
         {

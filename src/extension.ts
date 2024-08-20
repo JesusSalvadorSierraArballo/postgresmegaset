@@ -202,6 +202,13 @@ const getTemplateSelectTop = vscode.commands.registerCommand('postgresqlmegaset.
 		//documentInstanceMap.set(editor.document, table);
 });
 
+const getTemplateCrud = vscode.commands.registerCommand('postgresqlmegaset.getCrudTemplate',  async (table: Table) => {
+	const source = await table.getCrudScript();
+		const file = await vscode.workspace.openTextDocument({ content: source, language: 'sql' });
+    const editor = await vscode.window.showTextDocument(file);
+		//documentInstanceMap.set(editor.document, table);
+});
+
 	context.subscriptions.push(
 		disposable, 
 		messa, 
@@ -213,7 +220,8 @@ const getTemplateSelectTop = vscode.commands.registerCommand('postgresqlmegaset.
 		deleteAllTableToER,
 		getProcedureSource, 
 		deleteInstance,
-		getTemplateSelectTop
+		getTemplateSelectTop,
+		getTemplateCrud
 	);
 	vscode.window.registerTreeDataProvider('schemaTree', postgresProvider);
 }
