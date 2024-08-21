@@ -37,7 +37,7 @@ export class ConnectionInfo {
                 END
                   es_integer,
             CASE
-                  WHEN col.data_type = 'text' THEN
+                  WHEN col.data_type = 'text' OR col.data_type LIKE 'char%' THEN
                     1
                   ELSE
                     0
@@ -50,8 +50,8 @@ export class ConnectionInfo {
                     0
                 END
                   es_bit,
-            CASE WHEN COALESCE(col.numeric_scale, 0) = 0 AND (col.data_type = 'datetime' or col.data_type = 'DATE') 
-            THEN 1 ELSE 0 END isDate,
+            CASE WHEN COALESCE(col.numeric_scale, 0) = 0 AND (col.data_type = 'datetime' or col.data_type = 'DATE' or UPPER(col.data_type) LIKE '%TIMESTAMP%') 
+            THEN 1 ELSE 0 END "isDate",
           case when exists (
             select * from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ccu
               left join information_schema.TABLE_CONSTRAINTS tc
@@ -121,6 +121,7 @@ export class ConnectionInfo {
         left join relacion_constraints rc
           on tb_campos."isForeignKey" = 1
           and tb_campos."schema" = rc.shema_origen
+          and tb_campos."table" = rc.tabla_origen
           and tb_campos.column = rc.columna_origen
         WHERE    LOWER(tb_campos.table) LIKE lower(COALESCE('${table}', '%'))
         and     LOWER(tb_campos."schema") LIKE lower(COALESCE('${schema}', '%'))

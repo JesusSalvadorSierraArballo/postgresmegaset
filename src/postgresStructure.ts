@@ -24,8 +24,8 @@ export class PostgresProvider implements vscode.TreeDataProvider<Instance> {
       return await element.getChildrens();
     } else {
       let connections =  await this.store.getConnections();
-        const dependencies = connections.map((c) => new Instance(c.host, vscode.TreeItemCollapsibleState.Collapsed, c));
-        return Promise.resolve(dependencies);
+        const instance = connections.map((c) => new Instance(c.host, vscode.TreeItemCollapsibleState.Collapsed, c));
+        return Promise.resolve(instance);
     }
   }
 

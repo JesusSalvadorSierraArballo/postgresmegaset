@@ -26,3 +26,27 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed
 
 - Diagram draw
+## [0.0.4] - 2023-08-13
+
+### Fixed
+
+- Diagram colors, now consider vscode theme
+- 
+## [0.0.5] - 2023-08-13
+
+### Added 
+
+- Add quality to er diagram.
+
+### Fixed 
+- Diagram container size  
+
+## [0.0.6] - 2023-08-13
+
+### Fix
+  - Improve line drawling in er diagram
+
+## [0.0.7] - 2023-08-13
+
+### Fix
+  - Remove duplicates columns on er

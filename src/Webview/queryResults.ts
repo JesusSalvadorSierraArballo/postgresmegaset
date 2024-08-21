@@ -1,4 +1,4 @@
-import { TableER } from "../types";
+import { TableStructure } from "../types";
 
 export function obtenerHtmlParaWebview(headers: string[], body: Array<Record<string, any[]>>) {
     return `
@@ -24,16 +24,57 @@ export function obtenerHtmlParaWebview(headers: string[], body: Array<Record<str
         </html>`;
   }
   
-export function getERDiagram(tables: TableER[]) {
+export function getERDiagram(tables: TableStructure[]) {
   return `
 <!DOCTYPE html>
 <html>
 <head>
     <title>Tabla Arrastrable en Canvas</title>
+      <style>
+        .vscode-style {
+            color: var(--vscode-editor-foreground); 
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Evita barras de desplazamiento */
+        }
+
+        #miCanvas {
+            display: block; /* Elimina el espacio extra debajo del canvas */
+            width: 100vw; /* Ancho del viewport */
+            height: 100vh; /* Alto del viewport */
+        }
+    </style>
 </head>
 <body>
-    <canvas id="miCanvas" width="800" height="800"></canvas>
+    <canvas id="miCanvas" width="100%" height="100%"></canvas>
     <script>
+
+    function setupCanvas(canvas) {
+        // Get the device pixel ratio, falling back to 1.
+        var dpr = window.devicePixelRatio || 1;
+        // Get the size of the canvas in CSS pixels.
+        var rect = canvas.getBoundingClientRect();
+        // Give the canvas pixel dimensions of their CSS
+        // size * the device pixel ratio.
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        var ctx = canvas.getContext('2d');
+        // Scale all drawing operations by the dpr, so you
+        // don't have to worry about the difference.
+        ctx.scale(dpr, dpr);
+        return ctx;
+    }
+        function getCSSPropertyValue(className, property) {
+            const element = document.createElement('div');
+            element.className = className;
+            document.body.appendChild(element);
+            const style = window.getComputedStyle(element);
+            const value = style.getPropertyValue(property);
+            document.body.removeChild(element);
+            return value.trim();
+        }
 
         class tb {
             constructor({schema, name, columns, position = {x:0, y:0}}) {
@@ -92,7 +133,9 @@ export function getERDiagram(tables: TableER[]) {
         let tables = ${JSON.stringify(tables)};
 
         var canvas = document.getElementById('miCanvas');
-        var ctx = canvas.getContext('2d');
+        var ctx = setupCanvas(document.getElementById('miCanvas'));
+        ctx.strokeStyle = getCSSPropertyValue("vscode-style", "color");
+        ctx.fillStyle = getCSSPropertyValue("vscode-style", "color");
         
         tablesObj = []
         let currentTablePositionX = 0;
@@ -134,12 +177,12 @@ export function getERDiagram(tables: TableER[]) {
                         column.relationship.table == name 
                          );
 
+                        let pkTblIsInRigth = table.position.x >= (tblRel.position.x + tblRel.cellWidth);
+
                         ctx.beginPath();
-                        ctx.moveTo(table.position.x, table.getColumnPosition(column.name));
-                        ctx.lineTo(tblRel.position.x, tblRel.getColumnPosition(column.relationship.column));
-                        ctx.strokeStyle = 'black';
+                        ctx.moveTo(table.position.x + ( pkTblIsInRigth? 0: table.cellWidth) , table.getColumnPosition(column.name));
+                        ctx.lineTo(tblRel.position.x + ( pkTblIsInRigth? tblRel.cellWidth: 0) , tblRel.getColumnPosition(column.relationship.column));
                         ctx.stroke();
-                        ctx.strokeStyle = 'black';
                      }
                     
                 }
@@ -175,8 +218,6 @@ export function getERDiagram(tables: TableER[]) {
                 }
             }
         });
-
-
          draw();
     </script>
 </body>
